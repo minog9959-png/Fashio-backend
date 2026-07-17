@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "https://fashio-x565.vercel.app/",
+    origin: "https://fashio-x565.vercel.app",
     // origin:https://fashio-x565.vercel.app/
     credentials: true,
   })
