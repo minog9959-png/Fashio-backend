@@ -13,13 +13,16 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "https://fashio-x565.vercel.app",
-    // origin:https://fashio-x565.vercel.app/
+    origin: "https://fashio-x565.vercel.app/",
     credentials: true,
   })
 );
 app.use(express.json());
 app.use("/api/form", formRoutes);
+// Health check
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running" });
+});
 
 connectDB();
 
