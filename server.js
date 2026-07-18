@@ -20,14 +20,17 @@ app.use(
 app.use(express.json());
 app.use("/api/form", formRoutes);
 // Health check
+
 app.get("/", (req, res) => {
   res.json({ message: "Backend is running" });
 });
 
 connectDB();
 
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
+
+export default app;
