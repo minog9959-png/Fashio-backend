@@ -2,16 +2,20 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MONGO_URI exists:", !!process.env.MONGO_URI);
+
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 10000,
+    });
+
     console.log("MongoDB Connected");
   } catch (error) {
-    console.error(error);
-    throw error; // process.exit(1) nahi
+    console.error("MongoDB Error:", error);
+    throw error;
   }
 };
 
 export default connectDB;
-
 // import mongoose from "mongoose";
 
 // const connectDB = async () => {
