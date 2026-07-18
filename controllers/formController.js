@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Form from "../models/Form.js";
+import connectDB from "../config/db.js";
 export const createForm = async (req, res) => {
   try {
     await connectDB();
