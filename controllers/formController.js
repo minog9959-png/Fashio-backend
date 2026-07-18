@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import Form from "../models/Form.js";
 export const createForm = async (req, res) => {
   try {
+    await connectDB();
     const { name, email, password, newpass } = req.body;
     //validation
     if (!name || !email || !password || !newpass) {
@@ -53,6 +54,7 @@ export const createForm = async (req, res) => {
 
 export const loginForm = async (req, res) => {
   try {
+    await connectDB();
     const { email, password } = req.body;
 
     // Validation
