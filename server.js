@@ -33,4 +33,19 @@ connectDB().catch((err) => console.error("DB Error:", err));
 //   console.log(`Server running on port ${PORT}`);
 // });
 
+app.get("/test-db", async (req, res) => {
+  try {
+    await connectDB();
+    res.json({
+      success: true,
+      message: "MongoDB Connected",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
 export default app;
