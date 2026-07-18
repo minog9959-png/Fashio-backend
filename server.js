@@ -25,8 +25,8 @@ app.get("/", (req, res) => {
   res.json({ message: "Backend is running" });
 });
 
-connectDB();
-
+// connectDB();
+connectDB().catch((err) => console.error("DB Error:", err));
 // const PORT = process.env.PORT || 5000;
 
 // app.listen(PORT, () => {
