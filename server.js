@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import cors from "cors";
 import formRoutes from "./routes/formRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 dns.setDefaultResultOrder("ipv4first");
@@ -33,6 +34,7 @@ app.use(cors());
 // );
 app.use(express.json());
 app.use("/api/form", formRoutes);
+app.use("/api/categories", categoryRoutes);
 
 // Health check
 app.get("/", (req, res) => {
