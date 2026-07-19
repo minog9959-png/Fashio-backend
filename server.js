@@ -10,21 +10,30 @@ dns.setDefaultResultOrder("ipv4first");
 
 dotenv.config();
 
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
+// console.log("EMAIL_USER:", process.env.EMAIL_USER);
+// console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://fashio-eight.vercel.app",
+];
 app.use(
   cors({
-    // origin: "https://fashio-eight.vercel.app",
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
 app.use(express.json());
 app.use("/api/form", formRoutes);
-// Health check
 
+// Health check
 app.get("/", (req, res) => {
   res.json({ message: "Backend is running" });
 });
