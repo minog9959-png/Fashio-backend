@@ -14,22 +14,23 @@ dotenv.config();
 // console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
 
 const app = express();
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://fashio-eight.vercel.app",
-];
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+app.use(cors());
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://fashio-eight.vercel.app",
+// ];
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
 app.use(express.json());
 app.use("/api/form", formRoutes);
 
