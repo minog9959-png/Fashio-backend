@@ -7,6 +7,7 @@ import sendEmail from "../utils/sendEmail.js";
 
 // const navigate = useNavigate();
 export const createForm = async (req, res) => {
+  console.log("Signup route hit");
   try {
     await connectDB();
     const { name, email, password, newpass } = req.body;
@@ -44,9 +45,9 @@ export const createForm = async (req, res) => {
     });
 
     console.log("User Saved:", newForm);
-
-    // const verifyLink = `${process.env.CLIENT_URL}/verify/${verificationToken}`;
-    const verifyLink = `http://localhost:8000/api/form/verify/${verificationToken}`;
+    
+    // const verifyLink = `http://localhost:8000/api/form/verify/${verificationToken}`;
+    const verifyLink = `${process.env.VITE_API_URL}/api/form/verify/${verificationToken}`;
     console.log("Sending email to:", email);
     console.log("Verify Link:", verifyLink);
     await sendEmail(
