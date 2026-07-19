@@ -155,11 +155,12 @@ export const verifyEmail = async (req, res) => {
     await connectDB();
 
     const { token } = req.params;
+    // console.log("Token from URL:", token);
 
     const user = await Form.findOne({
       verificationToken: token,
     });
-
+    // console.log("User found:", user);
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -172,10 +173,11 @@ export const verifyEmail = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Email verified successfully.",
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   message: "Email verified successfully.",
+    // });
+    return res.redirect(`${process.env.LIVE_URL}/login`);
 
   } catch (error) {
     res.status(500).json({
