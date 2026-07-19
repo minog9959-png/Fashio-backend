@@ -177,7 +177,7 @@ export const verifyEmail = async (req, res) => {
     //   success: true,
     //   message: "Email verified successfully.",
     // });
-    return res.redirect(`${process.env.VITE_API_URL}/login`);
+    return res.redirect(`${process.env.CLIENT_URL}/login`);
 
   } catch (error) {
     res.status(500).json({
