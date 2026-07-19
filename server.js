@@ -10,10 +10,14 @@ dns.setDefaultResultOrder("ipv4first");
 
 dotenv.config();
 
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
+
 const app = express();
 app.use(
   cors({
-    origin: "https://fashio-eight.vercel.app",
+    // origin: "https://fashio-eight.vercel.app",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -27,11 +31,11 @@ app.get("/", (req, res) => {
 
 // connectDB();
 connectDB().catch((err) => console.error("DB Error:", err));
-// const PORT = process.env.PORT || 5000;
 
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 app.get("/test-db", async (req, res) => {
   try {

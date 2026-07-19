@@ -15,7 +15,16 @@ const formSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  }
+  },
+
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+
+  verificationToken: {
+    type: String,
+  },
 });
 
 const Form = mongoose.model("Form", formSchema);
