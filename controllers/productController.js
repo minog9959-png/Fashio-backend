@@ -168,8 +168,12 @@ export const searchProducts = async (req, res) => {
 
 // Filter Products by Category
 export const filterProducts = async (req, res) => {
+
   try {
+     console.log("Filter API Hit");
+     console.log(req.query);
     const { category } = req.query;
+    console.log("Category from query:", category);
 
     const products = await Product.find({ category }).populate("category");
 
