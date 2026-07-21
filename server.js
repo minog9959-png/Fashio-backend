@@ -7,6 +7,8 @@ import formRoutes from "./routes/formRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 dns.setDefaultResultOrder("ipv4first");
@@ -39,6 +41,8 @@ app.use("/api/form", formRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products",productRoutes);
 app.use("/api/cart",cartRoutes);
+app.use("/api/wishlist",wishlistRoutes);
+app.use("/api/order",orderRoutes);
 
 // Health check
 app.get("/", (req, res) => {
