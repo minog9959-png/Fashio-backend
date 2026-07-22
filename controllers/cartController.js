@@ -2,7 +2,9 @@ import Cart from "../models/Cart.js";
 //Create Cart
 export const addToCart = async (req, res) => {
   try {
-    const { user, product, quantity } = req.body;
+    const { product, quantity } = req.body;
+
+    const user = req.user.id;
 
     // Check if product already exists in user's cart
     const existingCartItem = await Cart.findOne({
