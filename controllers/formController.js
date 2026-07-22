@@ -47,7 +47,7 @@ export const createForm = async (req, res) => {
     console.log("User Saved:", newForm);
     
     // const verifyLink = `http://localhost:8000/api/form/verify/${verificationToken}`;
-    const verifyLink = `${process.env.VITE_API_URL}/api/form/verify/${verificationToken}`;
+    const verifyLink = `${process.env.VITE_API_URL}/form/verify/${verificationToken}`;
     console.log("Sending email to:", email);
     console.log("Verify Link:", verifyLink);
     await sendEmail(
@@ -139,7 +139,9 @@ export const loginForm = async (req, res) => {
       success: true,
       message: "Login Successful",
       token,
+      userId: user._id,
     });
+    console.log("User ID:", user._id);
 
   } catch (error) {
     res.status(500).json({
