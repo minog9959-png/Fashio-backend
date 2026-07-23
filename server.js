@@ -9,6 +9,7 @@ import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import stripeRoutes from "./routes/stripeRoutes.js";
 
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 dns.setDefaultResultOrder("ipv4first");
@@ -43,6 +44,7 @@ app.use("/api/products",productRoutes);
 app.use("/api/cart",cartRoutes);
 app.use("/api/wishlist",wishlistRoutes);
 app.use("/api/order",orderRoutes);
+app.use("/api/stripe",stripeRoutes);
 
 // Health check
 app.get("/", (req, res) => {
