@@ -51,10 +51,13 @@ app.get("/", (req, res) => {
 
 // connectDB().catch((err) => console.error("DB Error:", err));
 
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 8000;
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
 app.get("/test-db", async (req, res) => {
   try {
