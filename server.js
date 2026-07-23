@@ -21,43 +21,40 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
-// const allowedOrigins = [
-//   "http://localhost:5173",
-//   "https://fashio-eight.vercel.app",
-// ];
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Database connection failed",
+    });
+  }
+});
+
+//Routes
 app.use(express.json());
 app.use("/api/form", formRoutes);
 app.use("/api/categories", categoryRoutes);
-app.use("/api/products",productRoutes);
-app.use("/api/cart",cartRoutes);
-app.use("/api/wishlist",wishlistRoutes);
-app.use("/api/order",orderRoutes);
-app.use("/api/stripe",stripeRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/stripe", stripeRoutes);
 
 // Health check
 app.get("/", (req, res) => {
   res.json({ message: "Backend is running" });
 });
 
-// connectDB();
-connectDB().catch((err) => console.error("DB Error:", err));
+// connectDB().catch((err) => console.error("DB Error:", err));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
 
 app.get("/test-db", async (req, res) => {
   try {
