@@ -101,7 +101,7 @@ export const verifyPayment = async (req, res) => {
       });
     }
 
-    // Payment paid nahi hui
+    // if a user not paid Payment
     order.paymentStatus = "Failed";
 
     await order.save();
