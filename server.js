@@ -13,6 +13,9 @@ import stripeRoutes from "./routes/stripeRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import adminAuthRoutes from "./routes/adminAuthRoutes.js";
 import adminDashboardRoutes from "./routes/adminDashboardRoutes.js";
+import adminUserRoutes from "./routes/adminUserRoutes.js";
+import adminProductRoutes from "./routes/adminProductRoutes.js";
+
 
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 dns.setDefaultResultOrder("ipv4first");
@@ -49,6 +52,8 @@ app.use("/api/stripe", stripeRoutes);
 app.use("/api/invoice", invoiceRoutes);
 app.use("/api/admin", adminAuthRoutes);
 app.use("/api/admin/dashboard", adminDashboardRoutes);
+app.use("/api/admin/users", adminUserRoutes);
+app.use("/api/admin/products", adminProductRoutes);
 
 // Health check
 app.get("/", (req, res) => {

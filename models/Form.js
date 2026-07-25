@@ -25,7 +25,11 @@ const formSchema = new mongoose.Schema({
   verificationToken: {
     type: String,
   },
-});
+},
+{
+  timestamps: true,
+}
+);
 
 const Form = mongoose.model("Form", formSchema);
 

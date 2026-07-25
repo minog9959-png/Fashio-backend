@@ -42,6 +42,7 @@ export const getRecentOrders = async (req, res) => {
     const recentOrders = await Order.find()
       .populate("user", "name email")
       .populate("items.product", "title price")
+      // descending order
       .sort({ createdAt: -1 })
       .limit(5);
 
