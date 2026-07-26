@@ -1,4 +1,5 @@
 import Category from "../models/Category.js";
+import Product from "../models/Product.js";
 
 // Create Category
 export const createCategory = async (req, res) => {
@@ -6,7 +7,9 @@ export const createCategory = async (req, res) => {
     const { name } = req.body;
 
     // Check if category already exists
-    const existingCategory = await Category.findOne({ name });
+    const existingCategory = await Category.findOne({
+      name: { $regex: `^${name.trim()}$`, $options: "i" }
+    });
 
     if (existingCategory) {
       return res.status(400).json({
@@ -17,12 +20,13 @@ export const createCategory = async (req, res) => {
 
     // Create new category
     const category = await Category.create({ name });
+    name: name.trim(),
 
-    res.status(201).json({
-      success: true,
-      message: "Category created successfully",
-      category,
-    });
+      res.status(201).json({
+        success: true,
+        message: "Category created successfully",
+        category,
+      });
 
   } catch (error) {
     res.status(500).json({
@@ -57,9 +61,21 @@ export const updateCategory = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
 
+    const existingCategory = await Category.findOne({
+      name: { $regex: `^${name.trim()}$`, $options: "i" },
+      _id: { $ne: id },
+    });
+
+    if (existingCategory) {
+      return res.status(400).json({
+        success: false,
+        message: "Category already exists",
+      });
+    }
+
     const category = await Category.findByIdAndUpdate(
       id,
-      { name },
+      { name: name.trim() },
       { new: true, runValidators: true }
     );
 
@@ -89,6 +105,21 @@ export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Check if any product is using this category
+    const product = await Product.findOne({
+      category: id,
+    });
+
+    console.log("Category ID:", id);
+    console.log("Product using category:", product);
+
+    if (product) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot delete category because products are using it.",
+      });
+    }
+
     const category = await Category.findByIdAndDelete(id);
 
     if (!category) {
@@ -104,6 +135,8 @@ export const deleteCategory = async (req, res) => {
     });
 
   } catch (error) {
+    console.log("Delete category error:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
