@@ -47,3 +47,74 @@ export const deleteProduct = async (req, res) => {
     });
   }
 };
+
+//Create product by admin
+export const createProduct = async (req, res) => {
+  try {
+    const { title, description, price, image, category } = req.body;
+
+    const newProduct = await Product.create({
+      title,
+      description,
+      price,
+      image,
+      category,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Product created successfully",
+      product: newProduct,
+    });
+  } catch (error) {
+    console.log("Create product error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to create product",
+    });
+  }
+};
+
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { title, description, price, image, category } = req.body;
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        title,
+        description,
+        price,
+        image,
+        category,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    console.log("Update product error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to update product",
+    });
+  }
+};
