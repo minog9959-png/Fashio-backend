@@ -22,9 +22,9 @@ export const createCheckoutSession = async (req, res) => {
       price_data: {
         currency: "usd",
         product_data: {
-          name: item.product.title,
+          name: item.product?.title || item.title,
         },
-        unit_amount: Math.round(item.product.price * 100),
+        unit_amount: Math.round((item.product?.price ?? item.price) * 100),
       },
       quantity: item.quantity,
     }));

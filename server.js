@@ -17,6 +17,8 @@ import adminUserRoutes from "./routes/adminUserRoutes.js";
 import adminProductRoutes from "./routes/adminProductRoutes.js";
 import adminOrderRoutes from "./routes/adminOrderRoutes.js";
 
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 dns.setDefaultResultOrder("ipv4first");
@@ -27,6 +29,18 @@ dotenv.config();
 // console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
 
 const app = express();
+
+// Socket.IO
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+});
+
+app.set("io", io);
+
 app.use(cors());
 
 app.use(async (req, res, next) => {
@@ -64,10 +78,35 @@ app.get("/", (req, res) => {
 
 // connectDB().catch((err) => console.error("DB Error:", err));
 
+
+// Socket connection
+// io.on("connection", (socket) => {
+//   console.log("User connected:", socket.id);
+
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected:", socket.id);
+//   });
+// });
+
+// Updated Socket connection
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  socket.on("joinUserRoom", (userId) => {
+    socket.join(`user_${userId}`);
+
+    console.log(`User ${userId} joined room`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 8000;
 
-  app.listen(PORT, () => {
+  httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
 }

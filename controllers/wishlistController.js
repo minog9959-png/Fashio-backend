@@ -36,7 +36,7 @@ export const addToWishlist = async (req, res) => {
   }
 };
 
-//get wishlist"
+// Get Wishlist
 export const getWishlist = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -45,10 +45,27 @@ export const getWishlist = async (req, res) => {
       .populate("product")
       .populate("user");
 
+    // Find wishlist items whose product has been deleted
+    const orphanedItems = wishlistItems.filter(
+      (item) => item.product === null
+    );
+
+    // Delete orphaned wishlist items from database
+    if (orphanedItems.length > 0) {
+      await Wishlist.deleteMany({
+        _id: { $in: orphanedItems.map((item) => item._id) },
+      });
+    }
+
+    // Return only valid wishlist items
+    const validWishlistItems = wishlistItems.filter(
+      (item) => item.product !== null
+    );
+
     res.status(200).json({
       success: true,
-      count: wishlistItems.length,
-      wishlistItems,
+      count: validWishlistItems.length,
+      wishlistItems: validWishlistItems,
     });
 
   } catch (error) {

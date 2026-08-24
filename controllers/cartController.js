@@ -46,19 +46,37 @@ export const addToCart = async (req, res) => {
   }
 };
 
-//Get Cart
+// Get Cart
 export const getCart = async (req, res) => {
   try {
     const { userId } = req.params;
 
+    // Get cart items with product details
     const cartItems = await Cart.find({ user: userId })
       .populate("product")
       .populate("user");
 
+    // Find cart items whose product has been deleted
+    const orphanedItems = cartItems.filter(
+      (item) => item.product === null
+    );
+
+    // Delete orphaned cart items from database
+    if (orphanedItems.length > 0) {
+      await Cart.deleteMany({
+        _id: { $in: orphanedItems.map((item) => item._id) },
+      });
+    }
+
+    // Remove orphaned items from response as well
+    const validCartItems = cartItems.filter(
+      (item) => item.product !== null
+    );
+
     res.status(200).json({
       success: true,
-      count: cartItems.length,
-      cartItems,
+      count: validCartItems.length,
+      cartItems: validCartItems,
     });
   } catch (error) {
     res.status(500).json({

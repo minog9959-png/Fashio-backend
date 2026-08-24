@@ -1,16 +1,73 @@
 import Order from "../models/Order.js";
+import Product from "../models/Product.js";
+
+// export const createOrder = async (req, res) => {
+//   try {
+//     const { user, items, totalPrice } = req.body;
+
+//     const order = new Order({
+//       user,
+//       items,
+//       totalPrice,
+//     });
+
+//     await order.save();
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Order placed successfully",
+//       order,
+//     });
+
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
 
 export const createOrder = async (req, res) => {
   try {
     const { user, items, totalPrice } = req.body;
 
+    const orderItems = [];
+
+    for (const item of items) {
+      const product = await Product.findById(item.product);
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Product not found: ${item.product}`,
+        });
+      }
+
+      orderItems.push({
+        product: product._id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        quantity: item.quantity,
+      });
+    }
+
     const order = new Order({
       user,
-      items,
+      items: orderItems,
       totalPrice,
     });
 
     await order.save();
+
+    // 🔔 Real-time admin notification
+    const io = req.app.get("io");
+
+    io.emit("newOrder", {
+      orderId: order._id,
+      userId: order.user,
+      message: "New order received!",
+    });
 
     res.status(201).json({
       success: true,
