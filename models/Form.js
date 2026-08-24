@@ -1,34 +1,49 @@
 import mongoose from "mongoose";
 
-const formSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
+const formSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
 
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
 
-  password: {
-    type: String,
-    required: true,
-  },
+    // Firebase UID
+    firebaseUid: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
 
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
+    // Keep this temporarily for old users
+    password: {
+      type: String,
+      required: false,
+    },
 
-  verificationToken: {
-    type: String,
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    verificationToken: {
+      type: String,
+    },
+
+    // Firebase Push Notification Token
+    fcmToken: {
+      type: String,
+      default: null,
+    },
   },
-},
-{
-  timestamps: true,
-}
+  {
+    timestamps: true,
+  }
 );
 
 const Form = mongoose.model("Form", formSchema);

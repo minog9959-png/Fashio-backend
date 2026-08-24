@@ -23,6 +23,7 @@ export const getAllOrders = async (req, res) => {
 
 // order status update
 export const updateOrderStatus = async (req, res) => {
+   console.log("🔥🔥🔥 NEW FCM UPDATE FUNCTION RUNNING 🔥🔥🔥");
   try {
     console.log("UPDATE ORDER STATUS API CALLED");
     const { id } = req.params;
