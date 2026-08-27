@@ -1,3 +1,5 @@
+import { getMessaging } from "firebase-admin/messaging";
+import firebaseAdmin from "../firebaseAdmin.js";
 import Order from "../models/Order.js";
 
 export const getAllOrders = async (req, res) => {
@@ -23,9 +25,11 @@ export const getAllOrders = async (req, res) => {
 
 // order status update
 export const updateOrderStatus = async (req, res) => {
-   console.log("🔥🔥🔥 NEW FCM UPDATE FUNCTION RUNNING 🔥🔥🔥");
+  console.log("🔥🔥🔥 ADMIN UPDATE ORDER STATUS 🔥🔥🔥");
+
   try {
     console.log("UPDATE ORDER STATUS API CALLED");
+
     const { id } = req.params;
     const { status } = req.body;
 
@@ -44,11 +48,8 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
-    const order = await Order.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true, runValidators: true }
-    );
+    // Get order + user because we need user's FCM token
+    const order = await Order.findById(id).populate("user");
 
     if (!order) {
       return res.status(404).json({
@@ -57,17 +58,64 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
+    console.log("========== FCM TEST ==========");
+    console.log("Order User:", order.user);
+    console.log("FCM Token:", order.user?.fcmToken);
+    console.log("New Status:", status);
+
+    // Update order status
+    order.status = status;
+
+    await order.save();
+
     console.log("Order updated:", order._id, order.status);
 
+    // 🔔 Firebase Push Notification
+    if (order.user?.fcmToken) {
+      try {
+        console.log("📤 Sending FCM notification...");
+
+        const response = await getMessaging(firebaseAdmin).send({
+          token: order.user.fcmToken,
+
+          notification: {
+            title: "Order Status Updated 📦",
+            body: `Your order status is now: ${status}`,
+          },
+
+          data: {
+            orderId: order._id.toString(),
+            status: status,
+          },
+        });
+
+        console.log("✅ FCM message sent:", response);
+
+      } catch (notificationError) {
+        console.error(
+          "❌ Push notification error:",
+          notificationError.message
+        );
+      }
+    } else {
+      console.log("⚠️ User does not have an FCM token");
+    }
+
+    // 🔴 Existing Socket.IO notification
     const io = req.app.get("io");
 
     console.log("IO OBJECT:", !!io);
+    console.log("Sending socket update to:", `user_${order.user._id}`);
 
-    io.to(`user_${order.user}`).emit("orderStatusUpdated", {
-      orderId: order._id,
-      status: order.status,
-      message: `Order status updated to ${order.status}`,
-    });
+    if (io) {
+      io.to(`user_${order.user._id}`).emit("orderStatusUpdated", {
+        orderId: order._id.toString(),
+        status: order.status,
+        message: `Order status updated to ${order.status}`,
+      });
+
+      console.log("✅ Socket status update sent");
+    }
 
     res.status(200).json({
       success: true,
@@ -76,6 +124,8 @@ export const updateOrderStatus = async (req, res) => {
     });
 
   } catch (error) {
+    console.error("Update Order Status Error:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
