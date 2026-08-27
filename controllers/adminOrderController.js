@@ -107,15 +107,15 @@ export const updateOrderStatus = async (req, res) => {
     console.log("IO OBJECT:", !!io);
     console.log("Sending socket update to:", `user_${order.user._id}`);
 
-    if (io) {
-      io.to(`user_${order.user._id}`).emit("orderStatusUpdated", {
-        orderId: order._id.toString(),
-        status: order.status,
-        message: `Order status updated to ${order.status}`,
-      });
+    if (io && order.user?._id) {
+  io.to(`user_${order.user._id}`).emit("orderStatusUpdated", {
+    orderId: order._id.toString(),
+    status: order.status,
+    message: `Order status updated to ${order.status}`,
+  });
 
-      console.log("✅ Socket status update sent");
-    }
+  console.log("✅ Socket status update sent");
+}
 
     res.status(200).json({
       success: true,
