@@ -5,12 +5,27 @@ const formSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true
     },
 
     email: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true
+    },
+
+    phone: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    // Keep this temporarily for old users
+    password: {
+      type: String,
+      required: false,
     },
 
     // Firebase UID
@@ -18,12 +33,6 @@ const formSchema = new mongoose.Schema(
       type: String,
       unique: true,
       sparse: true,
-    },
-
-    // Keep this temporarily for old users
-    password: {
-      type: String,
-      required: false,
     },
 
     isVerified: {

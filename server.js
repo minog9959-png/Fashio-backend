@@ -17,6 +17,7 @@ import adminUserRoutes from "./routes/adminUserRoutes.js";
 import adminProductRoutes from "./routes/adminProductRoutes.js";
 import adminOrderRoutes from "./routes/adminOrderRoutes.js";
 import ContactRoutes from "./routes/ContactRoutes.js";
+import newsletterRoutes from "./routes/newsletterRoutes.js";
 
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -85,6 +86,7 @@ app.use("/api/admin/users", adminUserRoutes);
 app.use("/api/admin/products", adminProductRoutes);
 app.use("/api/admin/orders", adminOrderRoutes);
 app.use("/api/contact", ContactRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 
 // Health check
 app.get("/", (req, res) => {
