@@ -48,3 +48,22 @@ export const subscribeNewsletter = async (req, res) => {
     });
   }
 };
+
+// Get subscriber on admin side
+
+export const getSubscribers = async (req, res) => {
+  try {
+    const subscribers = await Newsletter.find().sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: "Subscribers fetched successfully",
+      subscribers,
+    });
+  } catch (error) {
+    console.error("Get Subscribers Error:", error);
+
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
