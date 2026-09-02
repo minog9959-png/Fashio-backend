@@ -29,7 +29,13 @@ const productSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
+      subcategory: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
+
   {
     timestamps: true,
   }

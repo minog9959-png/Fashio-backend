@@ -142,6 +142,7 @@ export const loginForm = async (req, res) => {
       message: "Login Successful",
       token,
       userId: user._id,
+      name: user.name
     });
     console.log("User ID:", user._id);
 

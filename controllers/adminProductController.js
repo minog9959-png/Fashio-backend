@@ -51,7 +51,7 @@ export const deleteProduct = async (req, res) => {
 //Create product by admin
 export const createProduct = async (req, res) => {
   try {
-    const { title, description, price, image, category } = req.body;
+    const { title, description, price, image, category, subcategory } = req.body;
 
     const newProduct = await Product.create({
       title,
@@ -59,6 +59,7 @@ export const createProduct = async (req, res) => {
       price,
       image,
       category,
+      subcategory
     });
 
     res.status(201).json({
@@ -80,7 +81,7 @@ export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { title, description, price, image, category } = req.body;
+    const { title, description, price, image, category, subcategory } = req.body;
 
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
@@ -90,6 +91,7 @@ export const updateProduct = async (req, res) => {
         price,
         image,
         category,
+        subcategory
       },
       {
         new: true,

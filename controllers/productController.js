@@ -3,7 +3,7 @@ import Product from "../models/Product.js";
 // Create Product
 export const createProduct = async (req, res) => {
   try {
-    const { title, description, price, image, category } = req.body;
+    const { title, description, price, image, category, subcategory } = req.body;
 
     const product = await Product.create({
       title,
@@ -11,6 +11,7 @@ export const createProduct = async (req, res) => {
       price,
       image,
       category,
+      subcategory
     });
 
     res.status(201).json({
@@ -76,7 +77,7 @@ export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { title, description, price, image, category } = req.body;
+    const { title, description, price, image, category, subcategory } = req.body;
 
     const product = await Product.findByIdAndUpdate(
       id,
@@ -86,6 +87,7 @@ export const updateProduct = async (req, res) => {
         price,
         image,
         category,
+        subcategory
       },
       {
         new: true,
@@ -167,21 +169,29 @@ export const searchProducts = async (req, res) => {
 };
 
 // Filter Products by Category
+
 export const filterProducts = async (req, res) => {
-
   try {
-     console.log("Filter API Hit");
-     console.log(req.query);
-    const { category } = req.query;
-    console.log("Category from query:", category);
+    const { category, subcategory } = req.query;
 
-    const products = await Product.find({ category }).populate("category");
+    const filter = {};
+
+    if (category) {
+      filter.category = category;
+    }
+
+    if (subcategory) {
+      filter.subcategory = subcategory;
+    }
+
+    const products = await Product.find(filter).populate("category");
 
     res.status(200).json({
       success: true,
       count: products.length,
       products,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
